@@ -222,15 +222,32 @@ module BlockCypher
     # Wallet API
     ##################
 
+    def wallets
+      api_http_get('/wallets')
+    end
+    
     def wallet_create(name, addresses)
       payload = { 'name' => name, 'addresses' => Array(addresses)}
       api_http_post('/wallets', json_payload: payload)
+    end
+    
+    def wallet_hd_create(name, extended_public_key)
+      payload = { 'name' => name, 'extended_public_key' => extended_public_key}
+      api_http_post('/wallets/hd', json_payload: payload)
     end
 
     def wallet_get(name)
       api_http_get('/wallets/' + name)
     end
-
+    
+    def wallet_hd_get(name)
+      api_http_get('/wallets/hd/' + name)
+    end 
+    
+    def wallet_hd_derive_addr(name)
+      api_http_post('/wallets/hd/' + name + '/addresses/derive')
+    end
+        
     def wallet_add_addr(name, addresses, omit_wallet_addresses: false)
       payload = { 'addresses' => Array(addresses) }
       query = { omitWalletAddresses: omit_wallet_addresses }
