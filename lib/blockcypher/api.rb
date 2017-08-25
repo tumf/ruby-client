@@ -95,12 +95,18 @@ module BlockCypher
       api_http_post('/txs/new', json_payload: payload)
     end
 
-    def transaction_sign_and_send(new_tx, private_key)
-      pubkey = pubkey_from_priv(private_key)
-      # Make array of pubkeys matching length of 'tosign'
-      new_tx['pubkeys'] = Array.new(new_tx['tosign'].length) { pubkey }
-      # Sign the 'tosign' array
-      new_tx['signatures'] = signer(private_key, new_tx['tosign'])
+    def transaction_sign_and_send(new_tx, private_keys)
+      unless private_keys.kind_of? Array
+        private_keys = [private_keys]
+      end
+
+      new_tx['pubkeys'] = []
+      new_tx['signatures'] = []
+      private_keys.each { |private_key|
+        pubkey = pubkey_from_priv(private_key)
+        new_tx['pubkeys'] << pubkey
+        new_tx['signatures'] = signer(private_key, new_tx['tosign'])
+      }
       api_http_post('/txs/send', json_payload: new_tx)
     end
 
