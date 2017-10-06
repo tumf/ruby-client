@@ -395,10 +395,13 @@ module BlockCypher
       # Process the response
       begin
         json_response = JSON.parse(response.body)
-        return json_response
       rescue => e
         raise "Unable to parse JSON response #{e.inspect}, #{response.body}"
       end
+
+      raise Error, json_response['error'] if json_response.key?('error')
+
+      json_response
     end
 
     def api_http_get(api_path, query: {})
