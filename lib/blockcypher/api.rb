@@ -188,18 +188,20 @@ module BlockCypher
       }
       query[:before] = before if before
       query[:after] = after if after
+      query[:confirmations] = confirmations if confirmations
 
       api_http_get('/addrs/' + address, query: query)
     end
 
-    def address_balance(address, omit_wallet_addresses: false)
+    def address_balance(address, omit_wallet_addresses: false, confirmations: nil)
       query = { omitWalletAddresses: omit_wallet_addresses }
+      query[:confirmations] = confirmations if confirmations
       api_http_get('/addrs/' + address + '/balance', query: query)
     end
 
-    def address_final_balance(address, omit_wallet_addresses: false)
+    def address_final_balance(address, omit_wallet_addresses: false, confirmations: nil)
       details = address_balance(address,
-                                omit_wallet_addresses: omit_wallet_addresses)
+                                omit_wallet_addresses: omit_wallet_addresses, confirmations: confirmations)
       details['final_balance']
     end
 
