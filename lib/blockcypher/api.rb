@@ -92,10 +92,6 @@ module BlockCypher
     def transaction_sign_and_send(new_tx, private_keys)
       new_tx['pubkeys'] = []
       new_tx['signatures'] = []
-      private_keys.each do |_addr, private_key|
-        pubkey = pubkey_from_priv(private_key)
-        new_tx['pubkeys'] << pubkey
-      end
       new_tx['pubkeys'], new_tx['signatures'] = signer(new_tx, private_keys)
 
       api_http_post('/txs/send', json_payload: new_tx)
