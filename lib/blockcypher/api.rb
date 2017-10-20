@@ -94,11 +94,12 @@ module BlockCypher
 
       new_tx['pubkeys'] = []
       new_tx['signatures'] = []
-      private_keys.each do |private_key|
+      private_keys.each do |_addr, private_key|
         pubkey = pubkey_from_priv(private_key)
         new_tx['pubkeys'] << pubkey
       end
-      new_tx['signatures'] = signer(private_keys, new_tx['tosign'])
+      new_tx['signatures'] = signer(tx, private_keys)
+
       api_http_post('/txs/send', json_payload: new_tx)
     end
 
@@ -107,18 +108,18 @@ module BlockCypher
       key.pub
     end
 
-    def signer(private_keys, tosign)
+    def signer(tx, private_keys)
+      tosigns = tx['tosign']
       signatures = []
-
-      tosign.each_index do |i|
-        key = Bitcoin::Key.new(private_keys[i], nil, compressed = true)
-        to_sign_hex = tosign[i]
+      tx['inputs'].each_index { |i|
+        address = tx['inputs'][i]['addresses'].first
+        key = Bitcoin::Key.new(private_keys[address], nil, compressed = true)
+        to_sign_hex = tosigns[i]
         to_sign_binary = [to_sign_hex].pack('H*')
         sig_binary = key.sign(to_sign_binary)
         sig_hex = sig_binary.unpack('H*').first
         signatures << sig_hex
-      end
-
+      }
       signatures
     end
 
