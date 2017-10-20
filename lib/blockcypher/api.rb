@@ -98,7 +98,7 @@ module BlockCypher
         pubkey = pubkey_from_priv(private_key)
         new_tx['pubkeys'] << pubkey
       end
-      new_tx['signatures'] = signer(tx, private_keys)
+      new_tx['signatures'] = signer(new_tx, private_keys)
 
       api_http_post('/txs/send', json_payload: new_tx)
     end
