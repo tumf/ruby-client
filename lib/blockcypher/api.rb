@@ -73,7 +73,7 @@ module BlockCypher
       transaction_sign_and_send(tx_new, private_key)
     end
 
-    def transaction_new(input_addreses, output_addresses, satoshi_amount, change_address: nil, confirmations: nil)
+    def transaction_new(input_addreses, output_addresses, satoshi_amount, change_address: nil, confirmations: nil, fees: nil)
       payload = {
         'inputs' => [
           {
@@ -89,7 +89,7 @@ module BlockCypher
       }
       payload['change_address'] = change_address if change_address
       payload['confirmations'] = confirmations if confirmations
-      
+      payload['fees'] = fees if fees
       api_http_post('/txs/new', json_payload: payload)
     end
 
