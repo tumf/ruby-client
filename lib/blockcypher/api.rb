@@ -90,8 +90,6 @@ module BlockCypher
     end
 
     def transaction_sign_and_send(new_tx, private_keys)
-      private_keys = [private_keys] unless private_keys.is_a? Array
-
       new_tx['pubkeys'] = []
       new_tx['signatures'] = []
       private_keys.each do |_addr, private_key|
