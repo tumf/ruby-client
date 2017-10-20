@@ -111,8 +111,8 @@ module BlockCypher
     def signer(tx, private_keys)
       tosigns = tx['tosign']
       signatures = []
-      tx['inputs'].each_index { |i|
-        address = tx['inputs'][i]['addresses'].first
+      tx['tx']['inputs'].each_index { |i|
+        address = tx['tx']['inputs'][i]['addresses'].first
         key = Bitcoin::Key.new(private_keys[address], nil, compressed = true)
         to_sign_hex = tosigns[i]
         to_sign_binary = [to_sign_hex].pack('H*')
