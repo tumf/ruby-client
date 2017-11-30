@@ -73,9 +73,9 @@ module BlockCypher
       transaction_sign_and_send(tx_new, private_key)
     end
 
-    def transaction_new(input_addresses, output_addresses, satoshi_amount, change_address: nil, confirmations: nil, fees: nil)
+    def transaction_new(inputs, output_addresses, satoshi_amount, change_address: nil, confirmations: nil, fees: nil)
       payload = {
-        'inputs' =>  input_addresses.collect { |addr| { addresses: [addr] } },
+        'inputs' =>  inputs,
         'outputs' => [
           {
             addresses: output_addresses,
