@@ -203,6 +203,7 @@ module BlockCypher
     end
 
     def address_full_txs(address, limit: 10, before: nil, after: nil,
+                         instart: nil, outstart: nil,
                          include_hex: false, omit_wallet_addresses: false, include_confidence: false)
       query = {
         limit: limit,
@@ -210,6 +211,8 @@ module BlockCypher
         omitWalletAddresses: omit_wallet_addresses,
         includeConfidence: include_confidence
       }
+      query[:instart] = instart if instart
+      query[:outstart] = outstart if outstart
       query[:before] = before if before
       query[:after] = after if after
 
